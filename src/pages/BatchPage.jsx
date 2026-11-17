@@ -50,7 +50,7 @@ export default function BatchPage() {
 
           <button
             onClick={() => setShowModal(true)}
-            className="px-4 py-2 bg-gradient-to-tr from-red-500 via-orange-500 to-red-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-500 whitespace-nowrap shrink-0"
+            className="px-4 py-2 bg-gradient-to-tr from-red-500 via-orange-500 to-red-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-500 whitespace-nowrap"
           >
             <Plus size={18} />
             Add Batch
