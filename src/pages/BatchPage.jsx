@@ -50,7 +50,7 @@ export default function BatchPage() {
 
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center gap-2 bg-gradient-to-tr from-red-500 via-orange-500 to-red-500 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition"
+            className="flex items-center justify-center gap-2 w-full sm:w-auto whitespace-nowrap bg-gradient-to-tr from-red-500 via-orange-500 to-red-500 text-white px-4 py-2 rounded-lg hover:bg-orange-500 transition"
           >
             <Plus size={18} />
             Add Batch
