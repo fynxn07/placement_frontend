@@ -20,11 +20,11 @@ const COLUMNS = [
   },
   {
     header: 'Fee Status',
-    render: s => s.feeCompleted ? 'Completed' : 'Pending',
+    render: s => (s.feeCompleted ? 'Completed' : 'Pending'),
   },
   {
     header: 'Project Status',
-    render: s => s.projectCompleted ? 'Completed' : 'Pending',
+    render: s => (s.projectCompleted ? 'Completed' : 'Pending'),
   },
   {
     header: 'Eligibility',
@@ -86,29 +86,21 @@ export default function CourseStudentsPage() {
     fetchData();
   }, []);
 
-  const courseBatches = batches.filter(
-    b => b.course === course
-  );
+  const courseBatches = batches.filter(b => b.course === course);
 
   const isValidCourse = courseBatches.length > 0;
 
-  const batchIds = new Set(
-    courseBatches.map(b => b.id)
-  );
+  const batchIds = new Set(courseBatches.map(b => b.id));
 
   const courseStudents = students
     .filter(s => batchIds.has(Number(s.batch)))
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  const monthOptions = [...new Set(
-    courseBatches.map(b => b.month)
-  )]
+  const monthOptions = [...new Set(courseBatches.map(b => b.month))]
     .sort()
     .map(m => ({ value: m, label: m }));
 
-  const yearOptions = [...new Set(
-    courseBatches.map(b => b.year)
-  )]
+  const yearOptions = [...new Set(courseBatches.map(b => b.year))]
     .sort((a, b) => a - b)
     .map(y => ({ value: y, label: String(y) }));
 
@@ -131,9 +123,7 @@ export default function CourseStudentsPage() {
 
   const total = visibleStudents.length;
 
-  const eligibleCount = visibleStudents.filter(
-    s => s.eligible
-  ).length;
+  const eligibleCount = visibleStudents.filter(s => s.eligible).length;
 
   const notEligibleCount = total - eligibleCount;
 
@@ -142,30 +132,16 @@ export default function CourseStudentsPage() {
       <Navbar />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
-
-        <Link
-          to="/batches"
-          className="text-sm text-blue-600 hover:underline"
-        >
+        <Link to="/batches" className="text-sm text-blue-600 hover:underline">
           ← Back to Courses
         </Link>
 
-        {loading && (
-          <p className="mt-6 text-slate-500">
-            Loading students...
-          </p>
-        )}
+        {loading && <p className="mt-6 text-slate-500">Loading students...</p>}
 
-        {error && (
-          <p className="mt-6 text-red-500">
-            {error}
-          </p>
-        )}
+        {error && <p className="mt-6 text-red-500">{error}</p>}
 
         {!loading && !error && !isValidCourse && (
-          <p className="mt-6 text-slate-700">
-            Course not found.
-          </p>
+          <p className="mt-6 text-slate-700">Course not found.</p>
         )}
 
         {!loading && !error && isValidCourse && (
@@ -175,7 +151,6 @@ export default function CourseStudentsPage() {
             </h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-
               <FilterSelect
                 label="Batch"
                 value={batch}
@@ -196,7 +171,6 @@ export default function CourseStudentsPage() {
                 onChange={setYear}
                 options={yearOptions}
               />
-
             </div>
 
             {(batch || month || year) && (
@@ -213,21 +187,14 @@ export default function CourseStudentsPage() {
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-
               <div className={CARD}>
-                <p className="text-sm text-slate-500">
-                  Total students
-                </p>
+                <p className="text-sm text-slate-500">Total students</p>
 
-                <p className="text-3xl font-black text-slate-900">
-                  {total}
-                </p>
+                <p className="text-3xl font-black text-slate-900">{total}</p>
               </div>
 
               <div className={CARD}>
-                <p className="text-sm text-slate-500">
-                  Eligible
-                </p>
+                <p className="text-sm text-slate-500">Eligible</p>
 
                 <p className="text-3xl font-black text-emerald-600">
                   {eligibleCount}
@@ -235,15 +202,12 @@ export default function CourseStudentsPage() {
               </div>
 
               <div className={CARD}>
-                <p className="text-sm text-slate-500">
-                  Not eligible
-                </p>
+                <p className="text-sm text-slate-500">Not eligible</p>
 
                 <p className="text-3xl font-black text-amber-600">
                   {notEligibleCount}
                 </p>
               </div>
-
             </div>
 
             {courseStudents.length === 0 ? (
@@ -252,20 +216,13 @@ export default function CourseStudentsPage() {
               <p>No students match these filters.</p>
             ) : (
               <div className="overflow-x-auto bg-white border border-slate-200 rounded-xl">
-
                 <table className="min-w-full text-sm text-left">
-
-                  <thead className="bg-slate-100 text-slate-600">
+                  <thead className="bg-orange-950 text-white">
                     <tr>
-                      <th className="px-3 py-2 font-semibold">
-                        Sl. No
-                      </th>
+                      <th className="px-3 py-2 font-semibold">Sl. No</th>
 
                       {COLUMNS.map(c => (
-                        <th
-                          key={c.header}
-                          className="px-3 py-2 font-semibold"
-                        >
+                        <th key={c.header} className="px-3 py-2 font-semibold">
                           {c.header}
                         </th>
                       ))}
@@ -273,15 +230,9 @@ export default function CourseStudentsPage() {
                   </thead>
 
                   <tbody className="divide-y divide-slate-100">
-
                     {visibleStudents.map((student, index) => (
-                      <tr
-                        key={student.id}
-                        className="hover:bg-slate-50"
-                      >
-                        <td className="px-3 py-2">
-                          {index + 1}
-                        </td>
+                      <tr key={student.id} className="hover:bg-amber-100">
+                        <td className="px-3 py-2">{index + 1}</td>
 
                         {COLUMNS.map(c => (
                           <td
@@ -293,17 +244,12 @@ export default function CourseStudentsPage() {
                         ))}
                       </tr>
                     ))}
-
                   </tbody>
-
                 </table>
-
               </div>
             )}
-
           </>
         )}
-
       </main>
     </div>
   );
