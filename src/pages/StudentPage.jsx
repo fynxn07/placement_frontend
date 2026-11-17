@@ -45,6 +45,8 @@ export default function StudentPage() {
   const [rowError, setRowError] = useState(null);
   const [savingId, setSavingId] = useState(null);
 
+  // const [showMore,setShowMore]=useState(false);
+
   // Open add student form
   const openAdd = () => {
     setEditingStudent(null);
@@ -344,12 +346,12 @@ export default function StudentPage() {
                 <tr>
                   <th className="px-3 py-2 font-semibold">Sl. No</th>
                   <th className="px-3 py-2 font-semibold">Name</th>
-                  <th className="px-3 py-2 font-semibold">Course</th>
+                  {/* <th className="px-3 py-2 font-semibold">Course</th> */}
                   <th className="px-3 py-2 font-semibold">Batch Name</th>
-                  <th className="px-3 py-2 font-semibold">Month</th>
-                  <th className="px-3 py-2 font-semibold">Year</th>
+                  {/* <th className="px-3 py-2 font-semibold">Month</th> */}
+                  {/* <th className="px-3 py-2 font-semibold">Year</th> */}
                   <th className="px-3 py-2 font-semibold">Phone</th>
-                  <th className="px-3 py-2 font-semibold">Email</th>
+                  {/* <th className="px-3 py-2 font-semibold">Email</th> */}
                   <th className="px-3 py-2 font-semibold">Course Status</th>
                   <th className="px-3 py-2 font-semibold">Fee Status</th>
                   <th className="px-3 py-2 font-semibold">Project Status</th>
@@ -372,21 +374,21 @@ export default function StudentPage() {
 
                       <td className="px-3 py-2 font-medium">{student.name}</td>
 
-                      <td className="px-3 py-2">{batch?.course || '-'}</td>
+                      {/* <td className="px-3 py-2">{batch?.course || '-'}</td> */}
 
                       <td className="px-3 py-2">{student.batchName || '-'}</td>
 
-                      <td className="px-3 py-2">{batch?.month || '-'}</td>
+                      {/* <td className="px-3 py-2">{batch?.month || '-'}</td> */}
 
-                      <td className="px-3 py-2">{batch?.year || '-'}</td>
+                      {/* <td className="px-3 py-2">{batch?.year || '-'}</td> */}
 
                       <td className="px-3 py-2 whitespace-nowrap">
                         {student.phone}
                       </td>
 
-                      <td className="px-3 py-2 whitespace-nowrap">
+                      {/* <td className="px-3 py-2 whitespace-nowrap">
                         {student.email}
-                      </td>
+                      </td> */}
 
                       {/* Course Status */}
                       <td className="px-3 py-2">
