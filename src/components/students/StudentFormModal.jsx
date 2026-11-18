@@ -13,11 +13,23 @@ const EMPTY = {
   name: '',
   email: '',
   phone: '',
+  qualification: '',
+  passoutYear: '',
+  collegeName: '',
   batch: '',
   courseStatus: 'Ongoing',
   feeCompleted: 'false',
   projectCompleted: 'false',
   placementStatus: 'Project not completed',
+
+  moduleEvaluation: '',
+  mockPresentation: '',
+  trainerFeedback: '',
+  hrFeedback: '',
+
+  resumeSession: '',
+  interviewSession: '',
+
   remarks: '',
 };
 
@@ -39,6 +51,13 @@ function validate(form) {
     errors.email = 'Enter a valid email.';
   }
 
+  if (
+    form.passoutYear &&
+    !/^\d{4}$/.test(form.passoutYear)
+  ) {
+    errors.passoutYear = 'Enter a valid 4-digit passout year.';
+  }
+
   return errors;
 }
 
@@ -55,11 +74,34 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
           name: student.name,
           email: student.email,
           phone: student.phone,
+
+          qualification: student.qualification ?? '',
+          passoutYear: student.passoutYear
+            ? String(student.passoutYear)
+            : '',
+          collegeName: student.collegeName ?? '',
+
           batch: String(student.batch),
           courseStatus: student.courseStatus,
           feeCompleted: String(student.feeCompleted),
           projectCompleted: String(student.projectCompleted),
           placementStatus: student.placementStatus,
+
+          moduleEvaluation: student.moduleEvaluation ?? '',
+          mockPresentation: student.mockPresentation ?? '',
+          trainerFeedback: student.trainerFeedback ?? '',
+          hrFeedback: student.hrFeedback ?? '',
+
+          resumeSession:
+            student.resumeSession === null
+              ? ''
+              : String(student.resumeSession),
+
+          interviewSession:
+            student.interviewSession === null
+              ? ''
+              : String(student.interviewSession),
+
           remarks: student.remarks ?? '',
         }
       : {}),
@@ -129,11 +171,34 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
         name: form.name.trim(),
         email: form.email.trim().toLowerCase(),
         phone: form.phone,
+
+        qualification: form.qualification.trim(),
+        passoutYear: form.passoutYear
+          ? Number(form.passoutYear)
+          : null,
+        collegeName: form.collegeName.trim(),
+
         batch: Number(form.batch),
         courseStatus: form.courseStatus,
         feeCompleted: form.feeCompleted === 'true',
         projectCompleted: form.projectCompleted === 'true',
         placementStatus: placementValue,
+
+        moduleEvaluation: form.moduleEvaluation.trim(),
+        mockPresentation: form.mockPresentation.trim(),
+        trainerFeedback: form.trainerFeedback.trim(),
+        hrFeedback: form.hrFeedback.trim(),
+
+        resumeSession:
+          form.resumeSession === ''
+            ? null
+            : form.resumeSession === 'true',
+
+        interviewSession:
+          form.interviewSession === ''
+            ? null
+            : form.interviewSession === 'true',
+
         remarks: form.remarks.trim(),
       };
 
@@ -161,13 +226,22 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
       <form
         onSubmit={handleSubmit}
         noValidate
-        className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6"
+        className="bg-white rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-6"
       >
         <h2 className="text-lg font-bold mb-4">
           {student ? 'Edit Student' : 'Add Student'}
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          {/* Basic Details */}
+
+          <div className="sm:col-span-2">
+            <h3 className="font-semibold text-slate-700 border-b pb-2">
+              Basic Details
+            </h3>
+          </div>
+
           <FormField label="Name" error={errors.name}>
             <input
               className={inputClass}
@@ -192,6 +266,38 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
               className={inputClass}
               value={form.phone}
               onChange={set('phone')}
+            />
+          </FormField>
+
+          <FormField label="Qualification">
+            <input
+              type="text"
+              className={inputClass}
+              value={form.qualification}
+              onChange={set('qualification')}
+              placeholder="e.g. BCA, MCA, B.Tech"
+            />
+          </FormField>
+
+          <FormField label="Passout Year" error={errors.passoutYear}>
+            <input
+              type="number"
+              min="1900"
+              max="9999"
+              className={inputClass}
+              value={form.passoutYear}
+              onChange={set('passoutYear')}
+              placeholder="e.g. 2025"
+            />
+          </FormField>
+
+          <FormField label="College Name">
+            <input
+              type="text"
+              className={inputClass}
+              value={form.collegeName}
+              onChange={set('collegeName')}
+              placeholder="Enter college name"
             />
           </FormField>
 
@@ -223,20 +329,20 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
 
           {selectedBatch && (
             <div className="sm:col-span-2 bg-slate-50 rounded-lg p-3 text-sm">
-              <p>
-                <strong>Course:</strong> {selectedBatch.course}
-              </p>
-              <p>
-                <strong>Month:</strong> {selectedBatch.month}
-              </p>
-              <p>
-                <strong>Year:</strong> {selectedBatch.year}
-              </p>
-              <p>
-                <strong>Batch number:</strong> {selectedBatch.batch_number}
-              </p>
+              <p><strong>Course:</strong> {selectedBatch.course}</p>
+              <p><strong>Month:</strong> {selectedBatch.month}</p>
+              <p><strong>Year:</strong> {selectedBatch.year}</p>
+              <p><strong>Batch number:</strong> {selectedBatch.batch_number}</p>
             </div>
           )}
+
+          {/* Course Details */}
+
+          <div className="sm:col-span-2 mt-2">
+            <h3 className="font-semibold text-slate-700 border-b pb-2">
+              Course Details
+            </h3>
+          </div>
 
           <FormField label="Course status">
             <select
@@ -258,8 +364,14 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
               value={form.feeCompleted}
               onChange={set('feeCompleted')}
             >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
+              {FEE_STATUS.map(option => (
+                <option
+                  key={option.value}
+                  value={option.value === 'yes' ? 'true' : 'false'}
+                >
+                  {option.label}
+                </option>
+              ))}
             </select>
           </FormField>
 
@@ -269,8 +381,14 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
               value={form.projectCompleted}
               onChange={set('projectCompleted')}
             >
-              <option value="true">Yes</option>
-              <option value="false">No</option>
+              {PROJECT_STATUS.map(option => (
+                <option
+                  key={option.value}
+                  value={option.value === 'yes' ? 'true' : 'false'}
+                >
+                  {option.label}
+                </option>
+              ))}
             </select>
           </FormField>
 
@@ -301,7 +419,89 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
             </span>
           </div>
 
-          <div className="sm:col-span-2">
+          {/* Evaluation and Feedback */}
+
+          <div className="sm:col-span-2 mt-2">
+            <h3 className="font-semibold text-slate-700 border-b pb-2">
+              Evaluation and Feedback
+            </h3>
+          </div>
+
+          <FormField label="Module Evaluation">
+            <textarea
+              className={inputClass}
+              rows={2}
+              value={form.moduleEvaluation}
+              onChange={set('moduleEvaluation')}
+              placeholder="Enter module evaluation"
+            />
+          </FormField>
+
+          <FormField label="Mock and Presentation">
+            <textarea
+              className={inputClass}
+              rows={2}
+              value={form.mockPresentation}
+              onChange={set('mockPresentation')}
+              placeholder="Enter mock and presentation details"
+            />
+          </FormField>
+
+          <FormField label="Trainer Feedback">
+            <textarea
+              className={inputClass}
+              rows={3}
+              value={form.trainerFeedback}
+              onChange={set('trainerFeedback')}
+              placeholder="Enter trainer feedback"
+            />
+          </FormField>
+
+          <FormField label="HR Feedback">
+            <textarea
+              className={inputClass}
+              rows={3}
+              value={form.hrFeedback}
+              onChange={set('hrFeedback')}
+              placeholder="Enter HR feedback"
+            />
+          </FormField>
+
+          {/* Session Attendance */}
+
+          <div className="sm:col-span-2 mt-2">
+            <h3 className="font-semibold text-slate-700 border-b pb-2">
+              Session Attendance
+            </h3>
+          </div>
+
+          <FormField label="Resume Session">
+            <select
+              className={inputClass}
+              value={form.resumeSession}
+              onChange={set('resumeSession')}
+            >
+              <option value="">Not recorded</option>
+              <option value="true">Present</option>
+              <option value="false">Absent</option>
+            </select>
+          </FormField>
+
+          <FormField label="Interview Session">
+            <select
+              className={inputClass}
+              value={form.interviewSession}
+              onChange={set('interviewSession')}
+            >
+              <option value="">Not recorded</option>
+              <option value="true">Present</option>
+              <option value="false">Absent</option>
+            </select>
+          </FormField>
+
+          {/* Remarks */}
+
+          <div className="sm:col-span-2 mt-2">
             <FormField label="Remarks / closure">
               <textarea
                 className={inputClass}

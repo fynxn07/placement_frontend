@@ -40,6 +40,10 @@ function formatStudent(student) {
     email: student.email,
     phone: student.phone,
 
+    qualification: student.qualification,
+    passoutYear: student.passout_year,
+    collegeName: student.college_name,
+
     batch: student.batch,
     batchName: student.batch_name,
 
@@ -48,6 +52,14 @@ function formatStudent(student) {
     projectCompleted: student.project_completed,
     eligible: student.eligible,
     placementStatus: student.placement_status,
+
+    moduleEvaluation: student.module_evaluation,
+    mockPresentation: student.mock_presentation,
+    trainerFeedback: student.trainer_feedback,
+    hrFeedback: student.hr_feedback,
+
+    resumeSession: student.resume_session,
+    interviewSession: student.interview_session,
 
     remarks: student.remarks,
     updatedBy: student.updated_by,
@@ -63,11 +75,25 @@ function formatStudentPayload(data) {
     name: 'name',
     email: 'email',
     phone: 'phone',
+
+    qualification: 'qualification',
+    passoutYear: 'passout_year',
+    collegeName: 'college_name',
+
     batch: 'batch',
     courseStatus: 'course_status',
     feeCompleted: 'fee_completed',
     projectCompleted: 'project_completed',
     placementStatus: 'placement_status',
+
+    moduleEvaluation: 'module_evaluation',
+    mockPresentation: 'mock_presentation',
+    trainerFeedback: 'trainer_feedback',
+    hrFeedback: 'hr_feedback',
+
+    resumeSession: 'resume_session',
+    interviewSession: 'interview_session',
+
     remarks: 'remarks',
   };
 
@@ -125,6 +151,17 @@ export async function updateStudent(id, data) {
 
   return formatStudent(response.data.data);
 }
+
+// Delete student
+export async function deleteStudent(id) {
+  const response = await authenticatedRequest({
+    method: 'DELETE',
+    url: `/students/${id}/`,
+  });
+
+  return response.data;
+}
+
 
 // Get all batch switch history
 export async function listBatchSwitches() {
