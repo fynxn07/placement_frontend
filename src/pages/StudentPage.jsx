@@ -303,12 +303,12 @@ export default function StudentPage() {
       prev.map(student =>
         student.id === updated.student_id
           ? {
-              ...student,
-              batch: updated.batch,
-              batchName: newBatch
-                ? `${newBatch.course} ${newBatch.month} ${newBatch.year} - ${newBatch.batch_number}`
-                : student.batchName,
-            }
+            ...student,
+            batch: updated.batch,
+            batchName: newBatch
+              ? `${newBatch.course} ${newBatch.month} ${newBatch.year} - ${newBatch.batch_number}`
+              : student.batchName,
+          }
           : student
       )
     );
@@ -612,15 +612,15 @@ export default function StudentPage() {
                               student,
                               completed
                                 ? {
-                                    projectCompleted: true,
-                                    placementStatus:
-                                      student.placementStatus === 'Project not completed'
-                                        ? 'Placement needed'
-                                        : student.placementStatus,
-                                  }
+                                  projectCompleted: true,
+                                  placementStatus:
+                                    student.placementStatus === 'Project not completed'
+                                      ? 'Placement needed'
+                                      : student.placementStatus,
+                                }
                                 : {
-                                    projectCompleted: false,
-                                  }
+                                  projectCompleted: false,
+                                }
                             );
                           }}
                         />
@@ -629,30 +629,26 @@ export default function StudentPage() {
                       {/* Eligibility */}
                       <td className="px-3 py-2">
                         <span
-                          className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                            isEligible(student)
+                          className={`px-2 py-0.5 rounded-full text-xs font-semibold ${isEligible(student)
                               ? 'bg-emerald-100 text-emerald-700'
                               : 'bg-red-100 text-red-700'
-                          }`}
+                            }`}
                         >
                           {isEligible(student) ? 'Yes' : 'No'}
                         </span>
                       </td>
 
                       {/* Placement Status */}
+                      {/* Placement Status */}
                       <td className="px-3 py-2">
                         <CellSelect
                           label="Placement status"
                           value={student.placementStatus}
-                          options={
-                            student.projectCompleted
-                              ? PLACEMENT_STATUS.filter(
-                                  option =>
-                                    option.value !== 'Project not completed'
-                                )
-                              : PLACEMENT_STATUS
-                          }
+                          options={PLACEMENT_STATUS.filter(
+                            option => option.value !== 'Project not completed'
+                          )}
                           disabled={
+                            !student.feeCompleted ||
                             !student.projectCompleted ||
                             savingId === student.id
                           }

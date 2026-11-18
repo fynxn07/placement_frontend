@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
 import FilterSelect from '../components/common/FilterSelect';
-import { listBatches } from '../services/batchService';
+import { listBatches, deleteBatch } from '../services/batchService';
 import { listStudents } from '../services/studentService';
+import { Trash2, X } from 'lucide-react';
+
 import {
   COURSE_STATUS,
   PLACEMENT_STATUS,
@@ -60,6 +62,11 @@ export default function CourseStudentsPage() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Batch deletion states
+  const [deletingBatch, setDeletingBatch] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   useEffect(() => {
     async function fetchData() {
@@ -127,6 +134,45 @@ export default function CourseStudentsPage() {
 
   const notEligibleCount = total - eligibleCount;
 
+  // Delete selected batch
+  async function handleDeleteBatch() {
+    if (!deletingBatch || isDeleting) return;
+
+    try {
+      setIsDeleting(true);
+      setDeleteError('');
+
+      await deleteBatch(deletingBatch.id);
+
+      // Remove deleted batch from the frontend
+      setBatches(prev =>
+        prev.filter(b => b.id !== deletingBatch.id)
+      );
+
+      // Clear batch filter if the deleted batch was selected
+      if (batch === String(deletingBatch.id)) {
+        setBatch('');
+      }
+
+      setDeletingBatch(null);
+    } catch (err) {
+      setDeleteError(
+        err.response?.data?.detail ||
+          err.response?.data?.message ||
+          'Failed to delete batch. Please try again.'
+      );
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
+  function closeDeleteModal() {
+    if (isDeleting) return;
+
+    setDeletingBatch(null);
+    setDeleteError('');
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
@@ -141,15 +187,64 @@ export default function CourseStudentsPage() {
         {error && <p className="mt-6 text-red-500">{error}</p>}
 
         {!loading && !error && !isValidCourse && (
-          <p className="mt-6 text-slate-700">Course not found.</p>
+          <div className="mt-6 bg-white border border-slate-200 rounded-xl p-6">
+            <p className="text-slate-700 font-medium">
+              This course has no batches remaining.
+            </p>
+
+            <Link
+              to="/batches"
+              className="inline-block mt-3 text-sm text-blue-600 hover:underline"
+            >
+              Back to Courses
+            </Link>
+          </div>
         )}
 
         {!loading && !error && isValidCourse && (
           <>
-            <h1 className="text-2xl font-bold text-slate-900 mt-3 mb-4">
+            <h1 className="text-2xl font-bold text-slate-900 mt-3 mb-5">
               {course}
             </h1>
 
+            {/* Batch Management */}
+            <section className="mb-8">
+              <h2 className="text-lg font-bold text-slate-900 mb-3">
+                Manage Batches
+              </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {courseBatches.map(item => (
+                  <div
+                    key={item.id}
+                    className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm flex justify-between items-center gap-3"
+                  >
+                    <div>
+                      <h3 className="font-semibold text-slate-800">
+                        Batch {item.batch_number}
+                      </h3>
+
+                      <p className="text-sm text-slate-500 mt-1">
+                        {item.month} {item.year}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        setDeletingBatch(item);
+                        setDeleteError('');
+                      }}
+                      className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition"
+                    >
+                      <Trash2 size={16} />
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Student Filters */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
               <FilterSelect
                 label="Batch"
@@ -186,6 +281,7 @@ export default function CourseStudentsPage() {
               </button>
             )}
 
+            {/* Student Statistics */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
               <div className={CARD}>
                 <p className="text-sm text-slate-500">Total students</p>
@@ -210,6 +306,7 @@ export default function CourseStudentsPage() {
               </div>
             </div>
 
+            {/* Student Table */}
             {courseStudents.length === 0 ? (
               <p>No students enrolled in this course yet.</p>
             ) : visibleStudents.length === 0 ? (
@@ -251,6 +348,67 @@ export default function CourseStudentsPage() {
           </>
         )}
       </main>
+
+      {/* Delete Confirmation Modal */}
+      {deletingBatch && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white w-full max-w-md rounded-xl shadow-xl p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-bold text-slate-900">
+                Delete Batch
+              </h2>
+
+              <button
+                onClick={closeDeleteModal}
+                disabled={isDeleting}
+                className="text-slate-400 hover:text-slate-700 disabled:opacity-50"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <p className="text-sm text-slate-600 mb-2">
+              Are you sure you want to delete this batch?
+            </p>
+
+            <p className="font-semibold text-slate-800 mb-4">
+              {deletingBatch.course} - Batch {deletingBatch.batch_number}
+              {' '}({deletingBatch.month} {deletingBatch.year})
+            </p>
+
+            {courseBatches.length === 1 && (
+              <p className="text-sm text-amber-700 bg-amber-50 rounded-lg p-3 mb-4">
+                This is the last batch in this course. Deleting it will also
+                remove the course from the Courses page.
+              </p>
+            )}
+
+            {deleteError && (
+              <div className="text-sm text-red-700 bg-red-50 rounded-lg p-3 mb-4">
+                {deleteError}
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={closeDeleteModal}
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg disabled:opacity-50"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleDeleteBatch}
+                disabled={isDeleting}
+                className="px-4 py-2 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg disabled:opacity-50"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete Batch'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
