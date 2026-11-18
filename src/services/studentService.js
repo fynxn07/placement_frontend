@@ -63,6 +63,7 @@ function formatStudent(student) {
 
     remarks: student.remarks,
     updatedBy: student.updated_by,
+    updatedByName: student.updated_by_name,
     updatedAt: student.updated_at,
   };
 }

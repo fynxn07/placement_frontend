@@ -670,7 +670,7 @@ export default function StudentPage() {
 
                       {/* Updated By */}
                       <td className="px-3 py-2 whitespace-nowrap">
-                        {student.updatedBy || '-'}
+                        {student.updatedByName || '-'}
                       </td>
 
                       {/* Updated Date */}
