@@ -1,3 +1,4 @@
+
 export const COURSE_STATUS = [
   { value: 'Ongoing', label: 'Ongoing' },
   { value: 'Completed', label: 'Completed' },
@@ -12,6 +13,21 @@ export const COURSE_STATUS = [
   { value: 'BatchSwitch/dropped', label: 'BatchSwitch/dropped' },
 ];
 
+export const FEE_STATUS = [
+  { value: 'yes', label: 'Yes' },
+  { value: 'no', label: 'No' },
+];
+
+export const PROJECT_STATUS = [
+  { value: 'yes', label: 'Yes' },
+  { value: 'no', label: 'No' },
+];
+
+export const ELIGIBILITY_STATUS = [
+  { value: 'yes', label: 'Yes' },
+  { value: 'no', label: 'No' },
+];
+
 export const PLACEMENT_STATUS = [
   { value: 'Placement needed', label: 'Placement Needed' },
   { value: 'Placed', label: 'Placed' },
@@ -19,9 +35,6 @@ export const PLACEMENT_STATUS = [
   { value: 'Placement not needed', label: 'Placement Not Needed' },
 ];
 
-export const BATCH_SWITCH_STATUS = COURSE_STATUS.filter(s =>
-  s.value.startsWith('BatchSwitch/')
-);
 export const MONTHS = [
   { value: 1, label: 'January' },
   { value: 2, label: 'February' },
@@ -36,7 +49,9 @@ export const MONTHS = [
   { value: 11, label: 'November' },
   { value: 12, label: 'December' },
 ];
+
 const thisYear = new Date().getFullYear();
+
 export const YEARS = [thisYear - 1, thisYear, thisYear + 1].map(y => ({
   value: y,
   label: String(y),
@@ -44,3 +59,7 @@ export const YEARS = [thisYear - 1, thisYear, thisYear + 1].map(y => ({
 
 export const labelOf = (list, value) =>
   list.find(item => item.value === value)?.label ?? value;
+
+export const BATCH_SWITCH_STATUS = COURSE_STATUS.filter(s =>
+  s.value.startsWith('BatchSwitch/')
+);
