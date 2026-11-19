@@ -3,7 +3,7 @@ export const COURSE_STATUS = [
   { value: 'Completed', label: 'Completed' },
   { value: 'Project', label: 'Project' },
   { value: 'Drop', label: 'Drop' },
-  { value: 'Hold', label: 'Hold' },
+  { value: 'Hold', label: 'Not Responding' },
   { value: 'Rejoined', label: 'Rejoined' },
 
   { value: 'BatchSwitch/ongoing', label: 'BatchSwitch/ongoing' },
