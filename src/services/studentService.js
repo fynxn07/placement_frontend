@@ -227,6 +227,9 @@ export async function previewStudentImport(file) {
     method: 'POST',
     url: '/student-import/preview/',
     data: formData,
+    headers: {
+      'Content-Type': undefined,
+    },
   });
 
   return response.data;
@@ -241,6 +244,9 @@ export async function confirmStudentImport(file) {
     method: 'POST',
     url: '/student-import/confirm/',
     data: formData,
+    headers: {
+      'Content-Type': undefined,
+    },
   });
 
   return response.data;
