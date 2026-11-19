@@ -24,6 +24,7 @@ import FilterSelect from '../components/common/FilterSelect';
 import StudentFormModal from '../components/students/StudentFormModal';
 import SwitchBatchModal from '../components/students/SwitchBatchModal';
 import StudentDetailsModal from '../components/students/StudentDetailsModal';
+import StudentImportModal from '../components/students/StudentImportModal';
 
 import {
   SquarePen,
@@ -150,6 +151,8 @@ export default function StudentPage() {
 
   // View More modal
   const [viewingStudent, setViewingStudent] = useState(null);
+
+  const [showImport, setShowImport] = useState(false);
 
   // Delete confirmation modal
   const [deletingStudent, setDeletingStudent] = useState(null);
@@ -347,6 +350,17 @@ export default function StudentPage() {
     }
   };
 
+  // Refresh students after successful Excel import
+  const handleImportSuccess = async () => {
+    try {
+      const updatedStudents = await listStudents();
+      setStudents(updatedStudents);
+    } catch (err) {
+      console.error('Failed to refresh students:', err);
+      setError('Import completed, but failed to refresh the student list.');
+    }
+  };
+
   // Close delete confirmation
   const closeDeleteModal = () => {
     if (deletingId !== null) return;
@@ -361,19 +375,37 @@ export default function StudentPage() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
 
+        
         {/* Page Header */}
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-2xl font-bold text-slate-900 mb-1">
             Students
           </h1>
 
-          <button
-            onClick={openAdd}
-            className="px-4 py-2 bg-gradient-to-tr from-red-500 via-orange-500 to-red-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-500"
-          >
-            Add Student
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowImport(true)}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700"
+            >
+              Import Excel
+            </button>
+
+            <button
+              onClick={openAdd}
+              className="px-4 py-2 bg-gradient-to-tr from-red-500 via-orange-500 to-red-500 text-white rounded-lg text-sm font-semibold hover:bg-orange-500"
+            >
+              Add Student
+            </button>
+          </div>
         </div>
+
+        {/* Excel Import Modal */}
+        {showImport && (
+          <StudentImportModal
+            onClose={() => setShowImport(false)}
+            onImported={handleImportSuccess}
+          />
+        )}
 
         {/* Student Form */}
         {showForm && (
@@ -630,8 +662,8 @@ export default function StudentPage() {
                       <td className="px-3 py-2">
                         <span
                           className={`px-2 py-0.5 rounded-full text-xs font-semibold ${isEligible(student)
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : 'bg-red-100 text-red-700'
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : 'bg-red-100 text-red-700'
                             }`}
                         >
                           {isEligible(student) ? 'Yes' : 'No'}

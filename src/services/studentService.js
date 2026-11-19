@@ -216,3 +216,32 @@ export async function switchBatch(studentId, { newBatch, reason = '' }) {
 
   return response.data.data;
 }
+
+
+// Preview Excel student import
+export async function previewStudentImport(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await authenticatedRequest({
+    method: 'POST',
+    url: '/student-import/preview/',
+    data: formData,
+  });
+
+  return response.data;
+}
+
+// Confirm Excel student import
+export async function confirmStudentImport(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await authenticatedRequest({
+    method: 'POST',
+    url: '/student-import/confirm/',
+    data: formData,
+  });
+
+  return response.data;
+}
