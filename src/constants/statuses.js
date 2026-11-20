@@ -4,7 +4,7 @@ export const COURSE_STATUS = [
   { value: 'Completed', label: 'Completed' },
   { value: 'Project', label: 'Project' },
   { value: 'Drop', label: 'Drop' },
-  { value: 'Hold', label: 'not_responding' },
+  { value: 'Hold', label: 'Hold' },
   { value: 'Rejoined', label: 'Rejoined' },
 
   { value: 'BatchSwitch/ongoing', label: 'BatchSwitch/ongoing' },
@@ -33,6 +33,8 @@ export const PLACEMENT_STATUS = [
   { value: 'Placed', label: 'Placed' },
   { value: 'Project not completed', label: 'Project Not Completed' },
   { value: 'Placement not needed', label: 'Placement Not Needed' },
+  { value: 'Not responding', label: 'Not Responding' },
+  
 ];
 
 export const MONTHS = [

@@ -375,7 +375,7 @@ export default function StudentPage() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-8">
 
-        
+
         {/* Page Header */}
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-2xl font-bold text-slate-900 mb-1">
@@ -607,11 +607,24 @@ export default function StudentPage() {
                           value={student.courseStatus}
                           options={COURSE_STATUS}
                           disabled={savingId === student.id}
-                          onChange={v =>
-                            handleFieldChange(student, {
-                              courseStatus: v,
-                            })
-                          }
+                          onChange={v => {
+                            const isDropped = [
+                              'Drop',
+                              'BatchSwitch/dropped',
+                            ].includes(v);
+
+                            handleFieldChange(
+                              student,
+                              isDropped
+                                ? {
+                                  courseStatus: v,
+                                  placementStatus: 'Placement not needed',
+                                }
+                                : {
+                                  courseStatus: v,
+                                }
+                            );
+                          }}
                         />
                       </td>
 
@@ -672,16 +685,19 @@ export default function StudentPage() {
 
                       {/* Placement Status */}
                       {/* Placement Status */}
+                      {/* Placement Status */}
                       <td className="px-3 py-2">
                         <CellSelect
                           label="Placement status"
-                          value={student.placementStatus}
-                          options={PLACEMENT_STATUS.filter(
-                            option => option.value !== 'Project not completed'
-                          )}
+                          value={student.placementStatus || ''}
+                          options={PLACEMENT_STATUS}
+                          placeholder={
+                            student.feeCompleted
+                              ? 'Select placement status'
+                              : 'Complete fee to enable'
+                          }
                           disabled={
                             !student.feeCompleted ||
-                            !student.projectCompleted ||
                             savingId === student.id
                           }
                           onChange={v =>
