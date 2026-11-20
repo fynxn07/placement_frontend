@@ -8,6 +8,7 @@ import StudentPage from './pages/StudentPage';
 import BatchPage from './pages/BatchPage';
 import CourseStudentsPage from './pages/CourseStudentsPage';
 import BatchSwitchPage from './pages/BatchSwitchPage';
+import DashboardStudents from './pages/DashboardStudents';
 
 export default function App() {
   return (
@@ -22,6 +23,15 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <DashboardPreview />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard/:category"
+            element={
+              <ProtectedRoute>
+                <DashboardStudents />
               </ProtectedRoute>
             }
           />
