@@ -689,7 +689,11 @@ export default function StudentPage() {
                       <td className="px-3 py-2">
                         <CellSelect
                           label="Placement status"
-                          value={student.placementStatus || ''}
+                          value={
+                            ['Drop', 'BatchSwitch/dropped'].includes(student.courseStatus)
+                              ? 'Placement not needed'
+                              : student.placementStatus || ''
+                          }
                           options={PLACEMENT_STATUS}
                           placeholder={
                             student.feeCompleted
@@ -697,6 +701,7 @@ export default function StudentPage() {
                               : 'Complete fee to enable'
                           }
                           disabled={
+                            ['Drop', 'BatchSwitch/dropped'].includes(student.courseStatus) ||
                             !student.feeCompleted ||
                             savingId === student.id
                           }
