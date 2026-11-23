@@ -81,6 +81,18 @@ export async function updateBatch(id, data) {
   return response.data.data;
 }
 
+
+// Delete batch
+export async function deleteBatch(id) {
+  const response = await authenticatedRequest({
+    method: 'DELETE',
+    url: `/batches/${id}/`,
+  });
+
+  return response.data;
+}
+
+
 // Fetch students in a batch
 export async function getBatchStudents(id) {
   const response = await authenticatedRequest({

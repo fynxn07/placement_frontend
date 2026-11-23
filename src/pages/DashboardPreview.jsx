@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
 import { useAuth } from '../context/AuthContext';
 import { getDashboardCounts } from '../services/dashboardService';
@@ -24,6 +25,7 @@ const metrics = [
     iconBg: 'bg-blue-50',
     iconColor: 'text-blue-600',
     badge: 'All Active Batches',
+    category: 'total-enrolled',
   },
   {
     key: 'eligible',
@@ -33,6 +35,7 @@ const metrics = [
     iconBg: 'bg-emerald-50',
     iconColor: 'text-emerald-600',
     badge: 'All Eligible Students',
+    category: 'eligible',
   },
   {
     key: 'notEligible',
@@ -41,7 +44,8 @@ const metrics = [
     icon: UserX,
     iconBg: 'bg-amber-50',
     iconColor: 'text-amber-600',
-    badge: 'All non-eligible Students',
+    badge: 'All Non-eligible Students',
+    category: 'not-eligible',
   },
   {
     key: 'dropped',
@@ -51,6 +55,7 @@ const metrics = [
     iconBg: 'bg-rose-50',
     iconColor: 'text-rose-600',
     badge: 'Dropped Students',
+    category: 'dropped',
   },
   {
     key: 'batchSwitch',
@@ -59,7 +64,8 @@ const metrics = [
     icon: ArrowRightLeft,
     iconBg: 'bg-purple-50',
     iconColor: 'text-purple-600',
-    badge: 'Batch Switch Students ',
+    badge: 'Batch Switch Students',
+    category: 'batch-switch',
   },
   {
     key: 'rejoined',
@@ -69,6 +75,7 @@ const metrics = [
     iconBg: 'bg-cyan-50',
     iconColor: 'text-cyan-600',
     badge: 'Resumed',
+    category: 'rejoined',
   },
   {
     key: 'placed',
@@ -78,11 +85,13 @@ const metrics = [
     iconBg: 'bg-teal-50',
     iconColor: 'text-teal-600',
     badge: 'Offers Secured',
+    category: 'placed',
   },
 ];
 
 export default function DashboardPreview() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [counts, setCounts] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -105,6 +114,10 @@ export default function DashboardPreview() {
 
     fetchDashboard();
   }, []);
+
+  function openCategory(category) {
+    navigate(`/dashboard/${category}`);
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
@@ -160,18 +173,28 @@ export default function DashboardPreview() {
 
         {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}
 
+        {loading && (
+          <p className="text-sm text-slate-500 mb-4">
+            Loading dashboard data...
+          </p>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {metrics.map((m, idx) => {
+          {metrics.map((m) => {
             const Icon = m.icon;
+
             return (
-              <div
-                key={idx}
-                className="bg-white rounded-xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md hover:border-red-300 transition cursor-pointer group"
+              <button
+                key={m.key}
+                type="button"
+                onClick={() => openCategory(m.category)}
+                className="text-left bg-white rounded-xl p-5 border border-slate-200/90 shadow-sm hover:shadow-md hover:border-blue-300 hover:-translate-y-1 transition-all duration-200 cursor-pointer group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600 group-hover:bg-red-50 group-hover:text-red-700 transition">
+                  <span className="text-xs font-medium px-2 py-0.5 rounded bg-slate-100 text-slate-600 group-hover:bg-blue-50 group-hover:text-blue-700 transition">
                     {m.badge}
                   </span>
+
                   <div
                     className={`w-9 h-9 rounded-lg ${m.iconBg} ${m.iconColor} flex items-center justify-center group-hover:scale-110 transition`}
                   >
@@ -180,13 +203,21 @@ export default function DashboardPreview() {
                 </div>
 
                 <div className="text-3xl font-black text-slate-900 tracking-tight mb-1">
-                  {counts ? counts[m.key] : '–'}
+                  {counts ? counts[m.key] ?? 0 : '–'}
                 </div>
-                <div className="text-sm font-semibold text-slate-800 mb-1 color-blue">
+
+                <div className="text-sm font-semibold text-slate-800 mb-1">
                   {m.title}
                 </div>
-                <p className="text-xs text-slate-500 line-clamp-1">{m.desc}</p>
-              </div>
+
+                <p className="text-xs text-slate-500 line-clamp-1">
+                  {m.desc}
+                </p>
+
+                <div className="mt-3 text-xs font-medium text-blue-600 opacity-0 group-hover:opacity-100 transition">
+                  View students →
+                </div>
+              </button>
             );
           })}
         </div>
