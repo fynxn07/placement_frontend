@@ -651,22 +651,9 @@ export default function StudentPage() {
                           options={PROJECT_STATUS}
                           disabled={savingId === student.id}
                           onChange={v => {
-                            const completed = v === 'yes';
-
-                            handleFieldChange(
-                              student,
-                              completed
-                                ? {
-                                  projectCompleted: true,
-                                  placementStatus:
-                                    student.placementStatus === 'Project not completed'
-                                      ? 'Placement needed'
-                                      : student.placementStatus,
-                                }
-                                : {
-                                  projectCompleted: false,
-                                }
-                            );
+                            handleFieldChange(student, {
+                              projectCompleted: v === 'yes',
+                            });
                           }}
                         />
                       </td>

@@ -31,7 +31,7 @@ export const ELIGIBILITY_STATUS = [
 export const PLACEMENT_STATUS = [
   { value: 'Placement needed', label: 'Placement Needed' },
   { value: 'Placed', label: 'Placed' },
-  { value: 'Project not completed', label: 'Project Not Completed' },
+  // { value: 'Project not completed', label: 'Project Not Completed' },
   { value: 'Placement not needed', label: 'Placement Not Needed' },
   { value: 'Not responding', label: 'Not Responding' },
   
