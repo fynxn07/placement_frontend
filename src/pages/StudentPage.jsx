@@ -695,14 +695,9 @@ export default function StudentPage() {
                               : student.placementStatus || ''
                           }
                           options={PLACEMENT_STATUS}
-                          placeholder={
-                            student.feeCompleted
-                              ? 'Select placement status'
-                              : 'Complete fee to enable'
-                          }
+                          placeholder="Select placement status"
                           disabled={
                             ['Drop', 'BatchSwitch/dropped'].includes(student.courseStatus) ||
-                            !student.feeCompleted ||
                             savingId === student.id
                           }
                           onChange={v =>

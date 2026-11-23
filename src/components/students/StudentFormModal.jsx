@@ -20,7 +20,7 @@ const EMPTY = {
   courseStatus: 'Ongoing',
   feeCompleted: 'false',
   projectCompleted: 'false',
-  placementStatus: 'Project not completed',
+  placementStatus: '',
 
   moduleEvaluation: '',
   mockPresentation: '',
@@ -71,39 +71,39 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
     ...EMPTY,
     ...(student
       ? {
-          name: student.name,
-          email: student.email,
-          phone: student.phone,
+        name: student.name,
+        email: student.email,
+        phone: student.phone,
 
-          qualification: student.qualification ?? '',
-          passoutYear: student.passoutYear
-            ? String(student.passoutYear)
-            : '',
-          collegeName: student.collegeName ?? '',
+        qualification: student.qualification ?? '',
+        passoutYear: student.passoutYear
+          ? String(student.passoutYear)
+          : '',
+        collegeName: student.collegeName ?? '',
 
-          batch: String(student.batch),
-          courseStatus: student.courseStatus,
-          feeCompleted: String(student.feeCompleted),
-          projectCompleted: String(student.projectCompleted),
-          placementStatus: student.placementStatus,
+        batch: String(student.batch),
+        courseStatus: student.courseStatus,
+        feeCompleted: String(student.feeCompleted),
+        projectCompleted: String(student.projectCompleted),
+        placementStatus: student.placementStatus,
 
-          moduleEvaluation: student.moduleEvaluation ?? '',
-          mockPresentation: student.mockPresentation ?? '',
-          trainerFeedback: student.trainerFeedback ?? '',
-          hrFeedback: student.hrFeedback ?? '',
+        moduleEvaluation: student.moduleEvaluation ?? '',
+        mockPresentation: student.mockPresentation ?? '',
+        trainerFeedback: student.trainerFeedback ?? '',
+        hrFeedback: student.hrFeedback ?? '',
 
-          resumeSession:
-            student.resumeSession === null
-              ? ''
-              : String(student.resumeSession),
+        resumeSession:
+          student.resumeSession === null
+            ? ''
+            : String(student.resumeSession),
 
-          interviewSession:
-            student.interviewSession === null
-              ? ''
-              : String(student.interviewSession),
+        interviewSession:
+          student.interviewSession === null
+            ? ''
+            : String(student.interviewSession),
 
-          remarks: student.remarks ?? '',
-        }
+        remarks: student.remarks ?? '',
+      }
       : {}),
   });
 
@@ -140,19 +140,13 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
     form.projectCompleted === 'true' &&
     !['Drop', 'BatchSwitch/dropped'].includes(form.courseStatus);
 
-  const placementLocked = form.projectCompleted !== 'true';
+  const isDropped = ['Drop', 'BatchSwitch/dropped'].includes(
+    form.courseStatus
+  );
 
-  const placementValue = placementLocked
-    ? 'Project not completed'
-    : form.placementStatus === 'Project not completed'
-      ? 'Placement needed'
-      : form.placementStatus;
-
-  const placementOptions = placementLocked
-    ? PLACEMENT_STATUS
-    : PLACEMENT_STATUS.filter(
-        option => option.value !== 'Project not completed'
-      );
+  const placementValue = isDropped
+    ? 'Placement not needed'
+    : form.placementStatus;
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -397,9 +391,11 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
               className={inputClass}
               value={placementValue}
               onChange={set('placementStatus')}
-              disabled={placementLocked}
+              disabled={isDropped}
             >
-              {placementOptions.map(option => (
+              <option value="">Select placement status</option>
+              
+              {PLACEMENT_STATUS.map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -409,11 +405,10 @@ export default function StudentFormModal({ student, onClose, onSaved }) {
 
           <div className="flex items-end">
             <span
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
-                eligible
-                  ? 'bg-emerald-100 text-emerald-700'
-                  : 'bg-amber-100 text-amber-700'
-              }`}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold ${eligible
+                ? 'bg-emerald-100 text-emerald-700'
+                : 'bg-amber-100 text-amber-700'
+                }`}
             >
               {eligible ? 'Eligible' : 'Not eligible'}
             </span>
