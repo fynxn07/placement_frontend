@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
-import { listStudents, listBatchSwitches } from '../services/studentService';
+import { listStudents } from '../services/studentService';
 
 const categoryTitles = {
   'total-enrolled': 'Total Enrolled Students',
@@ -22,7 +22,6 @@ export default function DashboardStudents() {
   const navigate = useNavigate();
 
   const [students, setStudents] = useState([]);
-  const [batchSwitches, setBatchSwitches] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -33,17 +32,12 @@ export default function DashboardStudents() {
       setError('');
 
       try {
-        if (category === 'batch-switch') {
-          const data = await listBatchSwitches();
-          setBatchSwitches(data);
-        } else {
-          const data = await listStudents();
-          setStudents(data);
-        }
+        const data = await listStudents();
+        setStudents(data);
       } catch (err) {
         setError(
           err.response?.data?.message ||
-            'Failed to load student details. Please try again.'
+          'Failed to load student details. Please try again.'
         );
       } finally {
         setLoading(false);
@@ -66,9 +60,14 @@ export default function DashboardStudents() {
       case 'dropped':
         return students.filter(isDropped);
 
+      case 'batch-switch':
+        return students.filter(student =>
+          student.courseStatus?.startsWith('BatchSwitch/')
+        );
+
       case 'rejoined':
-        return students.filter(
-          student => student.courseStatus === 'Rejoined'
+        return students.filter(student =>
+          ['Rejoined', 'BatchSwitch/rejoined'].includes(student.courseStatus)
         );
 
       case 'placed':
@@ -84,8 +83,7 @@ export default function DashboardStudents() {
     }
   }, [students, category]);
 
-  const displayedStudents =
-    category === 'batch-switch' ? batchSwitches : filteredStudents;
+  const displayedStudents = filteredStudents;
 
   const searchedStudents = displayedStudents.filter(student => {
     const searchText = search.toLowerCase();
