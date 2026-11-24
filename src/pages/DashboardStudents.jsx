@@ -54,7 +54,7 @@ export default function DashboardStudents() {
 
       case 'not-eligible':
         return students.filter(
-          student => student.eligible === false && !isDropped(student)
+          student => student.eligible === false && student.placementStatus !== 'Placed' && !isDropped(student)
         );
 
       case 'dropped':
